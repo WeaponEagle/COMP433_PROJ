@@ -13,7 +13,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include "IInvFile.h"
+#include "lib/IInvFile.h"
 
 // Integrated Inverted Index (see lecture notes on Implementation)
 IInvFile InvFile;
