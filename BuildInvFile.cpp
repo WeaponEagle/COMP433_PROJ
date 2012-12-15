@@ -13,7 +13,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include "IInvFile.h"
+#include "lib/IInvFile.h"
 
 // Integrated Inverted Index (see lecture notes on Implementation)
 IInvFile InvFile;
@@ -24,7 +24,7 @@ int main() {
 	int docid;
 	int loc;
 	int cnt=0;
-	FILE * fp = fopen("./post1.txt","rb");
+	FILE * fp = fopen("data/post1.txt","rb");
 	if (fp == NULL) {
 		printf("Cannot open file \r\n");
 		return 1;
