@@ -47,7 +47,7 @@ int main() {
 	}
 
 	printf("Saving inverted file ...\r\n");
-	InvFile.Save("InvFile.txt");
+	InvFile.Save("data/InvFile.txt");
 
 	InvFile.Clear();
 	fclose(fp);

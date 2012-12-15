@@ -29,13 +29,13 @@ int main() {
 	InvFile.MakeHashTable(13023973);
 
 	printf("Loading Inverted File\r\n");
-	InvFile.Load("InvFile.txt");
+	InvFile.Load("data/InvFile.txt");
 	printf("Creating Document Records (size = %d)\r\n", InvFile.MaxDocid+1);
 	InvFile.MakeDocRec();	// allocate document records
 	printf("Compute Document Lengths...\r\n");
 	InvFile.DocLen(InvFile.Files);
 	printf("Save Document Lengths\r\n");
-	InvFile.SaveDocRec("InvFile.doc");
+	InvFile.SaveDocRec("data/InvFile.doc");
 
 	return 0;
 }
