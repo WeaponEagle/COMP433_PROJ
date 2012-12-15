@@ -324,6 +324,7 @@ hnode * IInvFile::MakeHnode(char * s) {
 	r->df = 0;
 	r->next = htable[hvalue];
 	htable[hvalue]=r;
+	return r;
 }
 
 

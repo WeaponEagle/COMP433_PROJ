@@ -14,7 +14,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include "IInvFile.h"
+#include "lib/IInvFile.h"
 
 // Integrated Inverted Index (see lecture notes on Implementation)
 IInvFile InvFile;
@@ -25,10 +25,10 @@ int main() {
 	InvFile.MakeHashTable(13023973);
 
 	printf("Loading Inverted File\r\n");
-	InvFile.Load("InvFile.txt");
+	InvFile.Load("data/InvFile.txt");
 
 	printf("Load Document Lengths\r\n");
-	InvFile.LoadDocRec("InvFile.doc");
+	InvFile.LoadDocRec("data/InvFile.doc");
 
 	// Start interactive retrieval
 	InvFile.Retrieval();
