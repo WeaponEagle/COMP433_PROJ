@@ -1,12 +1,22 @@
 #include "data_structure/TermNode.h"
 
-TermNode::TermNode(char* term, int df, Posting* posting)
+TermNode::TermNode(char* term, int df)
 {
-	this->posting = posting;
+	this->posting = 0;
 	this->term = term;
 	this->df = df;
+	this->nextNode = 0;
 }
 
+TermNode* TermNode::next()
+{
+	return this->nextNode;
+}
+
+void TermNode::add(TermNode* nextNodePtr)
+{
+	this->nextNode = nextNodePtr;
+}
 Posting* TermNode::getPosting()
 {
 	return this->posting;
