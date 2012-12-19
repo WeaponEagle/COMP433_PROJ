@@ -160,6 +160,6 @@ void DataLoader::display()
 int DataLoader::getTotalDocuments(){
 	return this->documentRecords.size();
 }
-double DataLoader::getDocumentLengthById(int docid){
-	return this->documentRecords[docid]->getDocLen();
+DocRec* DataLoader::getDocumentRecordById(int docid){
+	return this->documentRecords[docid];
 }
