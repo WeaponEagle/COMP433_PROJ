@@ -9,6 +9,7 @@
 #include "VSMRetrieval.h"
 #include "RetrievedDocument.h"
 #include "DataLoader.h"
+#include "DocRec.h"
 
 #include <sstream>
 #include <iterator>
@@ -47,6 +48,10 @@ void VSMRetrieval::retrieve(std::string query)
     std::istream_iterator<std::string> begin(ss), end;
     std::vector<std::string> tokens(begin, end);
     
+    // Query Id
+    std::string queryId = tokens[0];
+    tokens.erase(tokens.begin());
+    
     // Query Length
     int numberOfTokens = (int) tokens.size();
     double queryLength = sqrt((double)numberOfTokens);
@@ -75,11 +80,13 @@ void VSMRetrieval::retrieve(std::string query)
     }
     
     // Normalize
+    std::vector<DocRec*> records;
     int size = (int) resultList.size();
     for (int i = 0; i < size; i++) {
         RetrievedDocument *retrievedDocument = resultList[i];
-        double documentLength = dataLoader->getDocumentLengthById(retrievedDocument->documentId);
-        retrievedDocument->similarity /= (queryLength * documentLength);
+        DocRec *record = dataLoader->getDocumentRecordById(retrievedDocument->documentId);
+        retrievedDocument->similarity /= (queryLength * record->getDocLen());
+        records.push_back(record);
     }
     
     // Sort results
@@ -89,7 +96,12 @@ void VSMRetrieval::retrieve(std::string query)
     size = std::min(MAX_NUMBER_OF_RESULTS, (int) resultList.size());
     for (int i = 0; i < size; i++) {
         RetrievedDocument *document = resultList[i];
-        std::cout << "Rank " << (i+1) << ": " << "Document ID: " << document->documentId << ", Similarity score: " << document->similarity << std::endl;
+        DocRec *record = records[i];
+        std::cout << queryId << " ";                        // Query ID
+        std::cout << "Q0 " << record->getDocName() << " ";  // Constant string
+        std::cout << (i + 1) << " ";                        // Rank
+        std::cout << document->similarity << " ";           // Similarity score
+        std::cout << "HKPU-1" << std::endl;                 // Run-ID
     }
     
 }
