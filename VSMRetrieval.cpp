@@ -85,14 +85,15 @@ void VSMRetrieval::retrieve(std::string query, std::ofstream& ofs)
     }
     
     // Normalize
-    std::vector<DocRec*> records;
     int size = (int) resultList.size();
     for (int i = 0; i < size; i++) {
         RetrievedDocument *retrievedDocument = resultList[i];
         DocRec *record = dataLoader->getDocumentRecordById(retrievedDocument->documentId);
-        //retrievedDocument->similarity /= (queryLength * record->getDocLen());
-		retrievedDocument->similarity =  (queryLength  *  record->getDocLen() - retrievedDocument->similarity);
-        records.push_back(record);
+        retrievedDocument->similarity /= (queryLength * record->getDocLen());
+		//retrievedDocument->similarity = 2*retrievedDocument->similarity / (queryLength*queryLength+record->getDocLen()*record->getDocLen());
+		//retrievedDocument->similarity =  (queryLength  *  record->getDocLen() - retrievedDocument->similarity);
+		//retrievedDocument->similarity = retrievedDocument->similarity / (record->getDocLen()*record->getDocLen()+queryLength*queryLength-retrievedDocument->similarity );
+		retrievedDocument->docRec = record;
     }
     
     // Sort results
@@ -100,15 +101,16 @@ void VSMRetrieval::retrieve(std::string query, std::ofstream& ofs)
 
     // Print maximum top 1000 results
     size = std::min(MAX_NUMBER_OF_RESULTS, (int) resultList.size());
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size - 1; i++) {
         RetrievedDocument *document = resultList[i];
-        DocRec *record = records[i];
+		DocRec *record = document->docRec;
 
-        ofs << queryId << " ";                        // Query ID
-        ofs << "0 " << record->getDocName() << " ";  // Constant string
-        ofs << (i) << " ";                        // Rank
-        ofs << document->similarity << " ";           // Similarity score
-        ofs << "TIM_06" << "\n";                 // Run-ID
+        ofs << queryId << " ";              // Query ID
+        ofs << "0" << " ";					// Constant string
+		ofs << record->getDocName() << " "; // TREC Document
+        ofs << (i) << " ";                  // Rank
+        ofs << document->similarity << " "; // Similarity score
+        ofs << "TIM_06" << "\n";            // Run-ID
     }
 
 	//std::cout << "======" << std::endl << std::endl;

@@ -9,10 +9,12 @@
 #ifndef comp433_RetrievedDocument_h
 #define comp433_RetrievedDocument_h
 
+class DocRec;
 struct RetrievedDocument
 {
     int documentId;
     double similarity;
+	DocRec* docRec;
 };
 
 #endif
