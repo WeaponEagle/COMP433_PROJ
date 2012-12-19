@@ -1,14 +1,35 @@
 #include "data_structure/DocRec.h"
-#include <iostream>
-#include <vector>
-#include <map>
-using namespace std;
 
-DocRec::DocRec(int docid, int doclen, string status, string docName, string filePath)
-{
+DocRec::DocRec(int docid, int doclen, std::string status, std::string docName, std::string docPath){
 	this->docid = docid;
 	this->doclen = doclen;
-	this->status = strdup(status);
-	this->docName = strdup(docName);
-	this->filePath = strdup(filePath);
+	this->status = status;
+	this->docName = docName;
+	this->docPath = docPath;
+}
+	
+void DocRec::setDocLen(double doclen){
+	this->doclen = doclen;
+}
+void DocRec::setStatus(std::string status){
+	this->status = status;
+}
+void DocRec::setDocName(std::string docName){
+	this->docName = docName;
+}
+void DocRec::setDocPath(std::string docPath){
+	this->docPath = docPath;
+}
+
+double DocRec::getDocLen(){
+	return this->doclen;
+}
+std::string DocRec::getStatus(){
+	return this->status;
+}
+std::string DocRec::getDocName(){
+	return this->docName;
+}
+std::string DocRec::getDocPath(){
+	return this->docPath;
 }

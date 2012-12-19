@@ -59,8 +59,8 @@ void VSMRetrieval::retrieve(std::string query)
         std::vector<Posting*> postings = termNode->getPosting();
         
         // Use this term's all postings to calculate TFIDF score
-        for (int i = 0; i < postings.size(); i++) {
-            Posting *posting = postings[i];
+        for (int j = 0; j < postings.size(); j++) {
+            Posting *posting = postings[j];
             int documentId = posting->getDocumentId();
             RetrievedDocument *retrievedDocument = &results[documentId];
             retrievedDocument->documentId = documentId;

@@ -1,17 +1,24 @@
-#include <vector>
-#include <map>
-using namespace std;
+#pragma once
+#include <string>
 
 class DocRec
 {
 public:
-	DocRec(int docid, int doclen, string status, string docName, string filePath);
+	DocRec(int docid, int doclen, std::string status, std::string docName, std::string docPath);
+	double getDocLen();
+	std::string getStatus();
+	std::string getDocName();
+	std::string getDocPath();
+	void setDocLen(double doclen);
+	void setStatus(std::string status);
+	void setDocName(std::string docName);
+	void setDocPath(std::string docPath);
 	
 private:
 	int docid;
-	int doclen;
-	string status;
-	string docName;
-	string filePath;
+	double doclen;
+	std::string status;
+	std::string docName;
+	std::string docPath;
 
 };
