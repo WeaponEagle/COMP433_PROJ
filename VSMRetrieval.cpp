@@ -9,6 +9,7 @@
 #include "VSMRetrieval.h"
 #include "RetrievedDocument.h"
 #include "DataLoader.h"
+#include "stem.h"
 
 #include <sstream>
 #include <iterator>
@@ -17,6 +18,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <fstream>
 
 int MAX_NUMBER_OF_RESULTS = 1000;
 
@@ -42,6 +44,8 @@ VSMRetrieval::VSMRetrieval(DataLoader *dataLoader)
  */
 void VSMRetrieval::retrieve(std::string query)
 {
+	stemmer stm;
+
     // Split query, putting all the tokens into a vector
     std::istringstream ss(query);
     std::istream_iterator<std::string> begin(ss), end;
@@ -55,7 +59,11 @@ void VSMRetrieval::retrieve(std::string query)
     std::map<int, RetrievedDocument> results;
     for (int i = 0; i < numberOfTokens; i++) {        
         std::string term = tokens[i];
+		stm.Stem(term);
         TermNode *termNode = dataLoader->findTerm(term.c_str());
+		if (!termNode) {
+			continue;
+		}
         std::vector<Posting*> postings = termNode->getPosting();
         
         // Use this term's all postings to calculate TFIDF score
@@ -78,18 +86,21 @@ void VSMRetrieval::retrieve(std::string query)
     int size = (int) resultList.size();
     for (int i = 0; i < size; i++) {
         RetrievedDocument *retrievedDocument = resultList[i];
-        double documentLength = dataLoader->getDocumentLengthById(retrievedDocument->documentId);
+		double documentLength = dataLoader->getDocumentRecordById(retrievedDocument->documentId)->getDocLen();
         retrievedDocument->similarity /= (queryLength * documentLength);
     }
     
     // Sort results
     std::sort(resultList.begin(), resultList.end(), ResultComparator());
-    
+    ofstream ofs("data/vsm_queryT.txt");
     // Print maximum top 1000 results
     size = std::min(MAX_NUMBER_OF_RESULTS, (int) resultList.size());
     for (int i = 0; i < size; i++) {
         RetrievedDocument *document = resultList[i];
         std::cout << "Rank " << (i+1) << ": " << "Document ID: " << document->documentId << ", Similarity score: " << document->similarity << std::endl;
     }
+	ofs.close();
+
+	std::cout << "======" << std::endl << std::endl;
     
 }

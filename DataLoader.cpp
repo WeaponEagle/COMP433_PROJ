@@ -9,6 +9,12 @@
 #include <map>
 using namespace std;
 
+DataLoader::DataLoader(){
+	this->hashSize = 13023973;
+}
+int DataLoader::getHashSize(){
+	return this->hashSize;
+}
 void DataLoader::loadInvFile(char *file_name){
 	FILE * fp = fopen(file_name, "rb");
 	char lineBuffer[10000];
@@ -16,17 +22,41 @@ void DataLoader::loadInvFile(char *file_name){
 		printf("Aborted: file not found for <%s>\r\n",file_name);
 		return;
 	}
-	int i = 0;
+	//int i = 0;
 	while ( ! feof (fp) )
 	{
 		if ( fgets (lineBuffer , 10000 , fp) != NULL )
 			invFileSingleLineProcess(lineBuffer);
-		i++;
-		if (i%1000 == 0){
-			cout<<"[i] = "<<i<<endl;
-		}
+		//i++;
+		//if (i%1000 == 0){
+		//	cout<<"[i] = "<<i<<endl;
+		//}
 	}
 };
+
+void DataLoader::invFileSingleLineProcess(char* lineBuffer){
+	char * token;
+	char term[1000]; int df; //used by termnode
+	int docid; int freq; //used by posting
+	char * delim = ",";
+	token = strtok(lineBuffer,":");
+	sscanf(token,"%s %d",term,&df);
+	//cout<<"get term & df: "<<term<<";"<<df<<endl;
+	//cout<<"token:"<<token<<endl;
+	TermNode* newTerm = new TermNode(strdup(term),df);
+
+	token = strtok (NULL, delim);
+	while(token != NULL)
+	{
+		//cout<<token<<endl;
+		sscanf(token,"%d %d",&docid,&freq);
+		//cout<<"get docid & freq: "<<docid<<";"<<freq<<endl;
+		newTerm->addPosting(docid,freq);
+		//system("pause");
+		token = strtok (NULL, delim);	
+	}  
+	this->add(newTerm);
+}
 
 void DataLoader::loadDocRec(char *file_name){
 	FILE * fp = fopen(file_name, "rb");
@@ -81,37 +111,25 @@ void DataLoader::loadDocLen(char *file_name){
 	}
 };
 
-void DataLoader::invFileSingleLineProcess(char* lineBuffer){
-	char * token;
-	char term[1000]; int df; //used by termnode
-	int docid; int freq; //used by posting
-	char * delim = ",";
-	token = strtok(lineBuffer,":");
-	sscanf(token,"%s %d",term,&df);
-	//cout<<"get term & df: "<<term<<";"<<df<<endl;
-	//cout<<"token:"<<token<<endl;
-	TermNode* newTerm = new TermNode(strdup(term),df);
-
-	token = strtok (NULL, delim);
-	while(token != NULL)
-	{
-		//cout<<token<<endl;
-		sscanf(token,"%d %d",&docid,&freq);
-		//cout<<"get docid & freq: "<<docid<<";"<<freq<<endl;
-		newTerm->addPosting(docid,freq);
-		//system("pause");
-		token = strtok (NULL, delim);	
-	}  
-	this->add(newTerm);
-
-}
 
 unsigned int DataLoader::hashGen(const char* term)
 {
-	unsigned int hashKey;
+	//unsigned int hashKey;
 	//cout<<"term: "<<term<<" ; strlen(term): "<<strlen(term)<<" \n";
-	hashKey = strlen(term)%this->hashSize;
+	//hashKey = strlen(term)%this->hashSize;
 	//cout<<"hashGen function called: "<<hashKey<<" \n";
+	
+	const char * t = term;
+	int hashKey = 3;
+	if (term == NULL) return 0;
+
+	while (*t != '\0') {
+		hashKey = (31*hashKey + 57*((int) (unsigned char) *t));
+		if (hashKey < 0) hashKey = -1 * hashKey;
+		hashKey = hashKey % this->getHashSize();
+		t++;
+	}
+	
 	return hashKey;
 }
 

@@ -6,6 +6,7 @@
 class DataLoader
 {
 public:
+	DataLoader::DataLoader();
 	void loadInvFile(char *file_name);
 	void loadDocRec(char *file_name);
 	void loadDocLen(char *file_name);
@@ -13,7 +14,8 @@ public:
 	TermNode* findTerm(const char* term);
 	int getTotalDocuments();
 	DocRec* getDocumentRecordById(int docid);
-	
+	int getHashSize();
+
 private:
 	int hashSize;
 	int totalDoc;
