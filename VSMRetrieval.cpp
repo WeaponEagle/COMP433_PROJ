@@ -103,6 +103,7 @@ void VSMRetrieval::retrieve(std::string query, std::ofstream& ofs)
     for (int i = 0; i < size; i++) {
         RetrievedDocument *document = resultList[i];
         DocRec *record = records[i];
+
         ofs << queryId << " ";                        // Query ID
         ofs << "0 " << record->getDocName() << " ";  // Constant string
         ofs << (i) << " ";                        // Rank

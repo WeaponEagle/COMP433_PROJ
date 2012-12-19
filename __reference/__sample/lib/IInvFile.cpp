@@ -253,7 +253,7 @@ void IInvFile::LoadDocRec(char * f) {
 	char line[10000];
 	int i =0;
 	char str[1000];
-	float doclen;
+	double doclen;
 
 	if ((MaxDocid > 0) && (Files != NULL)) {
 		printf("LoadDocRec error: already has document records\r\n");
@@ -270,7 +270,7 @@ void IInvFile::LoadDocRec(char * f) {
 		MaxDocid--;
 		MakeDocRec();
 		while (fgets(line,10000,fp) != NULL) {
-			sscanf(line,"%s %e",str, &doclen);
+			sscanf(line,"%s %lf",str, &doclen);
 			Files[i].TRECID = strdup(str);
 			Files[i].len = doclen;
 			if (i > MaxDocid) printf("LoadDocRec error: MaxDocid incorrect [%d,MaxDocid=%d]\r\n", i,MaxDocid);
@@ -288,9 +288,9 @@ void IInvFile::SaveDocRec(char * f) {
 		fprintf(fp,"%d\r\n",MaxDocid+1);
 		for(int i=0;i<=MaxDocid;i++) {
 			if (Files[i].TRECID == NULL)
-				fprintf(fp,"%d %e\r\n",i,Files[i].len);
+				fprintf(fp,"%d %lf\r\n",i,Files[i].len);
 			else
-				fprintf(fp,"%s %e\r\n",Files[i].TRECID, Files[i].len);
+				fprintf(fp,"%s %lf\r\n",Files[i].TRECID, Files[i].len);
 			}
 		fclose(fp);
 	}
