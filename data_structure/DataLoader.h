@@ -12,7 +12,7 @@ public:
 	void display();
 	TermNode* findTerm(const char* term);
 	int getTotalDocuments();
-	double getDocumentLengthById(int docid);
+	DocRec* getDocumentRecordById(int docid);
 	
 private:
 	int hashSize;
