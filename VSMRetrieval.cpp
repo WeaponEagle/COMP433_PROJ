@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 ECJMT. All rights reserved.
 //
 
-#include "retrieval/VSMRetrieval.h"
-#include "retrieval/RetrievedDocument.h"
-#include "data_structure/DataLoader.h"
+#include "VSMRetrieval.h"
+#include "RetrievedDocument.h"
+#include "DataLoader.h"
 
 #include <sstream>
 #include <iterator>

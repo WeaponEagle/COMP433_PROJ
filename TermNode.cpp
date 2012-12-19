@@ -1,4 +1,4 @@
-#include "data_structure/TermNode.h"
+#include "TermNode.h"
 #include <iostream>
 #include <vector>
 #include <map>

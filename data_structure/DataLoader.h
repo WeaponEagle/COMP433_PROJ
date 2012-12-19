@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "data_structure/DocRec.h"
-#include "data_structure/TermNode.h"
+#include "DocRec.h"
+#include "TermNode.h"
 
 class DataLoader
 {

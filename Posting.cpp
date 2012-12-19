@@ -1,4 +1,4 @@
-#include "data_structure/Posting.h"
+#include "Posting.h"
 
 Posting::Posting(int docid, int freq)
 {

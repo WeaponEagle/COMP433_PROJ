@@ -1,7 +1,7 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include "data_structure/DataLoader.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "DataLoader.h"
 #include <cmath>
 #include <iostream>
 #include <iomanip>

@@ -5,7 +5,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-#include "data_structure/Posting.h"
+#include "Posting.h"
 #include <vector>
 #include <map>
 using namespace std;

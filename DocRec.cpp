@@ -1,4 +1,4 @@
-#include "data_structure/DocRec.h"
+#include "DocRec.h"
 
 DocRec::DocRec(int docid, int doclen, std::string status, std::string docName, std::string docPath){
 	this->docid = docid;
