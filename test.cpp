@@ -55,7 +55,27 @@ cout << "\nTest 1: Printing Hash table with default bucket size :\n" ;
 	//system("pause");
 	
 	htable.loadData("data/InvFile.txt");
+
+	cout<<endl<<"************ PRINT ALL RECORDS IN INV FILE ******************"<<endl<<endl;
 	htable.display();
+	cout<<endl<<"************ SOME TESTING FOR FINDTERM() ******************"<<endl<<endl;
+	char* termA = "expediT";
+	cout<<endl<<"find term:"<<termA<<endl;
+	TermNode* node = htable.findTerm(termA);
+	if (node != NULL){
+		cout<<node->getTerm()<<" is found."<<endl;
+	}else{
+		cout<<termA<<" is not found."<<endl;
+	}
+	
+	char* termB = "ofpkwefpokw";
+	cout<<endl<<"find term:"<<termB<<endl;
+	node = htable.findTerm(termB);
+	if (node != NULL){
+		cout<<node->getTerm()<<" is found."<<endl;
+	}else{
+		cout<<termB<<" is not found."<<endl;
+	}
 
 	system("pause");
 	return 0;

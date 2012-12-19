@@ -48,11 +48,10 @@ void DataLoader::invFileSingleLineProcess(char* lineBuffer){
 	{
 		//cout<<token<<endl;
 		sscanf(token,"%d %d",&freq,&docid);
-		cout<<"get docid & freq: "<<docid<<";"<<freq<<endl;
+		//cout<<"get docid & freq: "<<docid<<";"<<freq<<endl;
 		newTerm->addPosting(docid,freq);
 		//system("pause");
-		token = strtok (NULL, delim);
-		
+		token = strtok (NULL, delim);	
 	}  
 	this->add(newTerm);
 
@@ -70,23 +69,26 @@ unsigned int DataLoader::hashGen(char* term)
 void DataLoader::add(TermNode* node)
 { 
 	bool isExist = false;
-	//TermNode* node
 	int hashKey = hashGen(node->getTerm());
-	//TermNode* TermNodePtr = new TermNode(strdup(node->getTerm()), node->getDocumentFrequency);
-
-	for (int i=0; i< myArray[hashKey].size(); i++){
-		//cout<<myArray[hashKey][i]->getTerm()<<" and "<<term<<strcmp(myArray[hashKey][i]->getTerm(),term)<<endl;
-		if (strcmp(myArray[hashKey][i]->getTerm(),node->getTerm()) == 0){
-			//cout<<"same word exist for"<<myArray[hashKey][i]->getTerm()<<" and "<<term<<", error exist";
-			isExist = true;
-		}
-	}
-	//system("pause");
-	if(!(isExist)){
+	TermNode* result = this->findTerm(node->getTerm());
+	if(result == NULL){
 		myArray[hashKey].push_back(node);
 	}
 }
 
+TermNode* DataLoader::findTerm(char* term)
+{
+	int hashKey = hashGen(term);
+	for (int i=0; i< myArray[hashKey].size(); i++){
+		//cout<<myArray[hashKey][i]->getTerm()<<" and "<<term<<strcmp(myArray[hashKey][i]->getTerm(),term)<<endl;
+		if (strcmp(myArray[hashKey][i]->getTerm(),term) == 0){
+			//cout<<"same word exist for"<<myArray[hashKey][i]->getTerm()<<" and "<<term<<", error exist";
+			return myArray[hashKey][i];
+		}
+	}
+	return NULL;
+};
+	
 void DataLoader::display()
 {
 	for( map<int, vector<TermNode*>>::iterator iter = myArray.begin(); iter != myArray.end(); ++iter ) {
@@ -95,7 +97,7 @@ void DataLoader::display()
 	   cout << Key;
 	   for (unsigned i = 0; i < tempVec.size(); i++) {
 		   TermNode* node = tempVec[i];
-		   cout<<"	term:" << node->getTerm() << " : "<<endl;
+		   cout<<"	term:" << node->getTerm() <<"	df:" << node->getDocumentFrequency() << " : "<<endl;
 		   vector<Posting*> posting = node->getPosting();
 		   for (unsigned j = 0; j < posting.size(); j++) {
 			   cout<<"		docid:"<<posting[j]->getDocumentId()<<" ; freq:"<<posting[j]->getTermFrequency()<<endl;
@@ -105,3 +107,4 @@ void DataLoader::display()
 	}
 	cout<<"DataLoaderable_display function called \n";
 }
+

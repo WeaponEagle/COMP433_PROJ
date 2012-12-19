@@ -15,11 +15,11 @@ public:
 	unsigned int hashGen(char* term); //takes the age and converts it into an index into the array of linked lists
 	void add(TermNode* node);
 	void display(); //prints the hash table
+	TermNode* findTerm(char* term);
 	//void DataLoaderable_delete(char *name, int age);
 	//~DataLoader(void);
 private:
 	int tsize;
 	void invFileSingleLineProcess(char* lineBuffer);
-	//TermNode ** myArray;
 	map<int, vector<TermNode*>> myArray;
 };
