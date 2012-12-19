@@ -10,33 +10,80 @@
 using namespace std;
 
 void DataLoader::loadData(char *file_name){
+	FILE * fp = fopen(file_name, "rb");
+	char lineBuffer[10000];
+
+	if (fp == NULL) {
+		printf("Aborted: file not found for <%s>\r\n",file_name);
+		return;
+	}
+	while ( ! feof (fp) )
+     {
+       if ( fgets (lineBuffer , 10000 , fp) != NULL )
+		   //cout<<lineBuffer;
+			invFileSingleLineProcess(lineBuffer);
+     }
+	//do {	
+		//next = true;
+		//if (fread(&c,1,1,fp) > 0) { // read a character
+	//}while(1);	
+};
+
+void DataLoader::invFileSingleLineProcess(char* lineBuffer){
+	//cout<<lineBuffer;
+	char * token;
+	char term[1000]; int df; //used by termnode
+	int docid; int freq; //used by posting
+	char * delim = ",";
+	//token = strtok(lineBuffer,":");
+	token = strtok(lineBuffer,":");
+	//cout<<"token:"<<token<<endl;
+	sscanf(token,"%s %d",term,&df);
+	//cout<<"get term & df: "<<term<<";"<<df<<endl;
+	//cout<<"token:"<<token<<endl;
+	TermNode* newTerm = new TermNode(strdup(term),df);
+	
+	token = strtok (NULL, delim);
+	while(token != NULL)
+	{
+		//cout<<token<<endl;
+		sscanf(token,"%d %d",&freq,&docid);
+		cout<<"get docid & freq: "<<docid<<";"<<freq<<endl;
+		newTerm->addPosting(docid,freq);
+		//system("pause");
+		token = strtok (NULL, delim);
+		
+	}  
+	this->add(newTerm);
 
 }
 
-unsigned int DataLoader::hash_gen(char* term)
+unsigned int DataLoader::hashGen(char* term)
 {
 	unsigned int hashKey;
 	//cout<<"term: "<<term<<" ; strlen(term): "<<strlen(term)<<" \n";
 	hashKey = strlen(term)%tsize;
-	//cout<<"hash_gen function called: "<<hashKey<<" \n";
+	//cout<<"hashGen function called: "<<hashKey<<" \n";
 	return hashKey;
 }
 
-void DataLoader::add(char *term, int df)
+void DataLoader::add(TermNode* node)
 { 
 	bool isExist = false;
-	int hashKey = hash_gen(term);
-	TermNode* TermNodePtr = new TermNode(term, df);
+	//TermNode* node
+	int hashKey = hashGen(node->getTerm());
+	//TermNode* TermNodePtr = new TermNode(strdup(node->getTerm()), node->getDocumentFrequency);
 
-	cout << myArray[hashKey].size();
 	for (int i=0; i< myArray[hashKey].size(); i++){
-		if (strcmp(myArray[hashKey][i]->getTerm(),term) == 0){
-			cout<<"same word exist, add posting for:"<<term<<endl;
+		//cout<<myArray[hashKey][i]->getTerm()<<" and "<<term<<strcmp(myArray[hashKey][i]->getTerm(),term)<<endl;
+		if (strcmp(myArray[hashKey][i]->getTerm(),node->getTerm()) == 0){
+			//cout<<"same word exist for"<<myArray[hashKey][i]->getTerm()<<" and "<<term<<", error exist";
 			isExist = true;
 		}
 	}
+	//system("pause");
 	if(!(isExist)){
-		myArray[hashKey].push_back(TermNodePtr);
+		myArray[hashKey].push_back(node);
 	}
 }
 
@@ -48,7 +95,11 @@ void DataLoader::display()
 	   cout << Key;
 	   for (unsigned i = 0; i < tempVec.size(); i++) {
 		   TermNode* node = tempVec[i];
-		   cout << " " << node->getTerm();
+		   cout<<"	term:" << node->getTerm() << " : "<<endl;
+		   vector<Posting*> posting = node->getPosting();
+		   for (unsigned j = 0; j < posting.size(); j++) {
+			   cout<<"		docid:"<<posting[j]->getDocumentId()<<" ; freq:"<<posting[j]->getTermFrequency()<<endl;
+		   }
 	   }
 	   cout << endl;
 	}

@@ -42,15 +42,20 @@ int main() {
    
 
 // Test1: add data to htable 
-    htable.DataLoaderable_add("David", 52); // add data to bucket 2 since hash value is 2
-	htable.DataLoaderable_add("Davod", 52); // add data to bucket 2 since hash value is 2
-	htable.DataLoaderable_add("David", 53); // add data to bucket 2 since hash value is 2
-	htable.DataLoaderable_add("Davod", 52); // add data to bucket 2 since hash value is 2
-	htable.DataLoaderable_add("David2", 52); // add data to bucket 2 since hash value is 2
-	htable.DataLoaderable_add("Goliath", 45); // add data to bucket 5 since hash value is 5
-	htable.DataLoaderable_add("Alan", 31);   // add data to bucket 1 since hash value is 1
+    /*htable.add("David", 52); // add data to bucket 2 since hash value is 2
+	htable.add("Davod", 52); // add data to bucket 2 since hash value is 2
+	htable.add("David", 53); // add data to bucket 2 since hash value is 2
+	htable.add("Davod", 52); // add data to bucket 2 since hash value is 2
+	htable.add("David2", 52); // add data to bucket 2 since hash value is 2
+	htable.add("Goliath", 45); // add data to bucket 5 since hash value is 5
+	htable.add("Alan", 31);   // add data to bucket 1 since hash value is 1
+	*/
 cout << "\nTest 1: Printing Hash table with default bucket size :\n" ; 
-	htable.DataLoaderable_display();
+	
+	//system("pause");
+	
+	htable.loadData("data/InvFile.txt");
+	htable.display();
 
 	system("pause");
 	return 0;

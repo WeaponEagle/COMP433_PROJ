@@ -1,10 +1,10 @@
 #include "data_structure/Posting.h"
 
-Posting::Posting(int docid, int freq,  Posting* nextNode)
+Posting::Posting(int docid, int freq)
 {
 	this->docid = docid;
 	this->freq = freq;
-	this->nextNode = nextNode;
+	//this->nextNode = nextNode;
 }
 
 int Posting::getDocumentId()
@@ -16,8 +16,9 @@ int Posting::getTermFrequency()
 {
 	return this->freq;
 }
-
+/*
 Posting* Posting::next()
 {
 	return this->nextNode;
 }
+*/

@@ -6,19 +6,23 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 
 #include "data_structure/Posting.h"
+#include <vector>
+#include <map>
+using namespace std;
 
 class TermNode
 {
 public:
 	TermNode(char* term, int df);
-	virtual Posting* getPosting();
+	virtual vector<Posting*> getPosting();
+	virtual void addPosting(int docid, int freq);
 	virtual void add(TermNode* nextNodePtr);
 	virtual TermNode* next();
 	virtual char* getTerm();
 	virtual int getDocumentFrequency();
 
 private:
-	Posting* posting;
+	vector<Posting*> posting;
 	TermNode* nextNode;
 	char* term;
 	int df;
