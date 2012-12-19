@@ -8,17 +8,20 @@
 #include "data_structure/TermNode.h"
 #pragma once
 #include <string>
+#include <vector>
+#include <map>
+using namespace std;
 class DataLoader
 {
 public:
-	DataLoader(void);
-	DataLoader(int tsize);
+	void loadData(char *file_name);
 	unsigned int hash_gen(char* term); //takes the age and converts it into an index into the array of linked lists
-	void DataLoaderable_add(char *new_name, int new_age);
-	void DataLoaderable_display(); //prints the hash table
-	void DataLoaderable_delete(char *name, int age);
-	~DataLoader(void);
+	void add(char *term, int df);
+	void display(); //prints the hash table
+	//void DataLoaderable_delete(char *name, int age);
+	//~DataLoader(void);
 private:
 	int tsize;
-	TermNode ** myArray;
+	//TermNode ** myArray;
+	map<int, vector<TermNode*>> myArray;
 };
