@@ -11,6 +11,7 @@
 
 #include "RetrievalModel.h"
 #include <string>
+#include "stem.h"
 
 class DataLoader;
 
@@ -18,10 +19,11 @@ class VSMRetrieval : public RetrievalModel
 {
 public:
     VSMRetrieval(DataLoader *dataLoader);
-    virtual void retrieve(std::string query);
+    virtual void retrieve(std::string query, std::ofstream& ofs);
     
 private:
     DataLoader *dataLoader;
+	stemmer stm;
 };
 
 

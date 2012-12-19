@@ -10,10 +10,11 @@
 #define comp433_RetrievalModel_h
 
 #include <string>
+#include <fstream>
 
 class RetrievalModel
 {
-    virtual void retrieve(std::string query) = 0;
+    virtual void retrieve(std::string query, std::ofstream& ofs) = 0;
 };
 
 

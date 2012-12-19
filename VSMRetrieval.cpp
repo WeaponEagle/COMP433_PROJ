@@ -9,7 +9,7 @@
 #include "VSMRetrieval.h"
 #include "RetrievedDocument.h"
 #include "DataLoader.h"
-#include "stem.h"
+#include "DocRec.h"
 
 #include <sstream>
 #include <iterator>
@@ -18,7 +18,6 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
-#include <fstream>
 
 int MAX_NUMBER_OF_RESULTS = 1000;
 
@@ -42,14 +41,16 @@ VSMRetrieval::VSMRetrieval(DataLoader *dataLoader)
 /**
  * Retrieve results
  */
-void VSMRetrieval::retrieve(std::string query)
+void VSMRetrieval::retrieve(std::string query, std::ofstream& ofs)
 {
-	stemmer stm;
-
     // Split query, putting all the tokens into a vector
     std::istringstream ss(query);
     std::istream_iterator<std::string> begin(ss), end;
     std::vector<std::string> tokens(begin, end);
+    
+    // Query Id
+    std::string queryId = tokens[0];
+    tokens.erase(tokens.begin());
     
     // Query Length
     int numberOfTokens = (int) tokens.size();
@@ -59,7 +60,8 @@ void VSMRetrieval::retrieve(std::string query)
     std::map<int, RetrievedDocument> results;
     for (int i = 0; i < numberOfTokens; i++) {        
         std::string term = tokens[i];
-		stm.Stem(term);
+		this->stm.Stem(term);
+
         TermNode *termNode = dataLoader->findTerm(term.c_str());
 		if (!termNode) {
 			continue;
@@ -83,24 +85,31 @@ void VSMRetrieval::retrieve(std::string query)
     }
     
     // Normalize
+    std::vector<DocRec*> records;
     int size = (int) resultList.size();
     for (int i = 0; i < size; i++) {
         RetrievedDocument *retrievedDocument = resultList[i];
-		double documentLength = dataLoader->getDocumentRecordById(retrievedDocument->documentId)->getDocLen();
-        retrievedDocument->similarity /= (queryLength * documentLength);
+        DocRec *record = dataLoader->getDocumentRecordById(retrievedDocument->documentId);
+        //retrievedDocument->similarity /= (queryLength * record->getDocLen());
+		retrievedDocument->similarity =  (queryLength  *  record->getDocLen() - retrievedDocument->similarity);
+        records.push_back(record);
     }
     
     // Sort results
     std::sort(resultList.begin(), resultList.end(), ResultComparator());
-    ofstream ofs("data/vsm_queryT.txt");
+
     // Print maximum top 1000 results
     size = std::min(MAX_NUMBER_OF_RESULTS, (int) resultList.size());
     for (int i = 0; i < size; i++) {
         RetrievedDocument *document = resultList[i];
-        std::cout << "Rank " << (i+1) << ": " << "Document ID: " << document->documentId << ", Similarity score: " << document->similarity << std::endl;
+        DocRec *record = records[i];
+        ofs << queryId << " ";                        // Query ID
+        ofs << "0 " << record->getDocName() << " ";  // Constant string
+        ofs << (i) << " ";                        // Rank
+        ofs << document->similarity << " ";           // Similarity score
+        ofs << "TIM_06" << "\n";                 // Run-ID
     }
-	ofs.close();
 
-	std::cout << "======" << std::endl << std::endl;
+	//std::cout << "======" << std::endl << std::endl;
     
 }
