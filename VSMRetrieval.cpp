@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 ECJMT. All rights reserved.
 //
 
-#include "VSMRetrieval.h"
-#include "DataLoader.h"
-#include "RetrievedDocument.h"
+#include "retrieval/VSMRetrieval.h"
+#include "retrieval/RetrievedDocument.h"
+#include "data_structure/DataLoader.h"
 
 #include <sstream>
 #include <iterator>
@@ -49,7 +49,7 @@ void VSMRetrieval::retrieve(std::string query)
     
     // Query Length
     int numberOfTokens = (int) tokens.size();
-    double queryLength = sqrt(numberOfTokens);
+    double queryLength = sqrt((double)numberOfTokens);
     
     // Find term
     std::map<int, RetrievedDocument> results;
@@ -64,7 +64,7 @@ void VSMRetrieval::retrieve(std::string query)
             int documentId = posting->getDocumentId();
             RetrievedDocument *retrievedDocument = &results[documentId];
             retrievedDocument->documentId = documentId;
-            retrievedDocument->similarity += posting->getTermFrequency() * (log(dataLoader->getTotalDocuments()) / termNode->getDocumentFrequency()); // TF * IDF
+            retrievedDocument->similarity += posting->getTermFrequency() * (log((double)dataLoader->getTotalDocuments()) / termNode->getDocumentFrequency()); // TF * IDF
         }
     }
     

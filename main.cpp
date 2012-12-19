@@ -16,6 +16,7 @@
 #include<iostream>
 using namespace std;
 #include "data_structure/DataLoader.h";
+#include "retrieval/VSMRetrieval.h";
 
 int main() {
 	/*
@@ -37,46 +38,56 @@ int main() {
 	}while(post != NULL);
 	*/
 	//  the default class constructor
-    DataLoader htable; //bucket size is 10
+    DataLoader invFile; //bucket size is 10
 
    
 
-// Test1: add data to htable 
-    /*htable.add("David", 52); // add data to bucket 2 since hash value is 2
-	htable.add("Davod", 52); // add data to bucket 2 since hash value is 2
-	htable.add("David", 53); // add data to bucket 2 since hash value is 2
-	htable.add("Davod", 52); // add data to bucket 2 since hash value is 2
-	htable.add("David2", 52); // add data to bucket 2 since hash value is 2
-	htable.add("Goliath", 45); // add data to bucket 5 since hash value is 5
-	htable.add("Alan", 31);   // add data to bucket 1 since hash value is 1
+// Test1: add data to invFile 
+    /*invFile.add("David", 52); // add data to bucket 2 since hash value is 2
+	invFile.add("Davod", 52); // add data to bucket 2 since hash value is 2
+	invFile.add("David", 53); // add data to bucket 2 since hash value is 2
+	invFile.add("Davod", 52); // add data to bucket 2 since hash value is 2
+	invFile.add("David2", 52); // add data to bucket 2 since hash value is 2
+	invFile.add("Goliath", 45); // add data to bucket 5 since hash value is 5
+	invFile.add("Alan", 31);   // add data to bucket 1 since hash value is 1
 	*/
 cout << "\nTest 1: Printing Hash table with default bucket size :\n" ; 
 	
 	//system("pause");
 	
-	htable.loadData("data/InvFile.txt");
+	invFile.loadData("data/InvFile.txt");
 
-	cout<<endl<<"************ PRINT ALL RECORDS IN INV FILE ******************"<<endl<<endl;
-	htable.display();
+	//cout<<endl<<"************ PRINT ALL RECORDS IN INV FILE ******************"<<endl<<endl;
+	//invFile.display();
 	cout<<endl<<"************ SOME TESTING FOR FINDTERM() ******************"<<endl<<endl;
-	char* termA = "expediT";
+	char* termA = "aU";
 	cout<<endl<<"find term:"<<termA<<endl;
-	TermNode* node = htable.findTerm(termA);
+	TermNode* node = invFile.findTerm(termA);
 	if (node != NULL){
 		cout<<node->getTerm()<<" is found."<<endl;
+		cout<<"posting size:"<<node->getPosting().size()<<endl;
+		
+		for (int i=0; i < node->getPosting().size(); i++){
+			cout<<"docid:"<<node->getPosting()[i]->getDocumentId()<<"; tf:"<<node->getPosting()[i]->getTermFrequency()<<endl;
+		}
+
 	}else{
 		cout<<termA<<" is not found."<<endl;
 	}
 	
 	char* termB = "ofpkwefpokw";
 	cout<<endl<<"find term:"<<termB<<endl;
-	node = htable.findTerm(termB);
+	node = invFile.findTerm(termB);
 	if (node != NULL){
 		cout<<node->getTerm()<<" is found."<<endl;
 	}else{
 		cout<<termB<<" is not found."<<endl;
 	}
 
+	VSMRetrieval vsmRetrieval(&invFile);
+	vsmRetrieval.retrieve("aU");
+
 	system("pause");
+
 	return 0;
 }

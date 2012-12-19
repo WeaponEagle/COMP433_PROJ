@@ -47,7 +47,7 @@ void DataLoader::invFileSingleLineProcess(char* lineBuffer){
 	while(token != NULL)
 	{
 		//cout<<token<<endl;
-		sscanf(token,"%d %d",&freq,&docid);
+		sscanf(token,"%d %d",&docid,&freq);
 		//cout<<"get docid & freq: "<<docid<<";"<<freq<<endl;
 		newTerm->addPosting(docid,freq);
 		//system("pause");
@@ -57,7 +57,7 @@ void DataLoader::invFileSingleLineProcess(char* lineBuffer){
 
 }
 
-unsigned int DataLoader::hashGen(char* term)
+unsigned int DataLoader::hashGen(const char* term)
 {
 	unsigned int hashKey;
 	//cout<<"term: "<<term<<" ; strlen(term): "<<strlen(term)<<" \n";
@@ -72,18 +72,18 @@ void DataLoader::add(TermNode* node)
 	int hashKey = hashGen(node->getTerm());
 	TermNode* result = this->findTerm(node->getTerm());
 	if(result == NULL){
-		myArray[hashKey].push_back(node);
+		invFile[hashKey].push_back(node);
 	}
 }
 
-TermNode* DataLoader::findTerm(char* term)
+TermNode* DataLoader::findTerm(const char* term)
 {
 	int hashKey = hashGen(term);
-	for (int i=0; i< myArray[hashKey].size(); i++){
-		//cout<<myArray[hashKey][i]->getTerm()<<" and "<<term<<strcmp(myArray[hashKey][i]->getTerm(),term)<<endl;
-		if (strcmp(myArray[hashKey][i]->getTerm(),term) == 0){
-			//cout<<"same word exist for"<<myArray[hashKey][i]->getTerm()<<" and "<<term<<", error exist";
-			return myArray[hashKey][i];
+	for (int i=0; i< invFile[hashKey].size(); i++){
+		//cout<<invFile[hashKey][i]->getTerm()<<" and "<<term<<strcmp(invFile[hashKey][i]->getTerm(),term)<<endl;
+		if (strcmp(invFile[hashKey][i]->getTerm(),term) == 0){
+			//cout<<"same word exist for"<<invFile[hashKey][i]->getTerm()<<" and "<<term<<", error exist";
+			return invFile[hashKey][i];
 		}
 	}
 	return NULL;
@@ -91,7 +91,7 @@ TermNode* DataLoader::findTerm(char* term)
 	
 void DataLoader::display()
 {
-	for( map<int, vector<TermNode*>>::iterator iter = myArray.begin(); iter != myArray.end(); ++iter ) {
+	for( map<int, vector<TermNode*>>::iterator iter = invFile.begin(); iter != invFile.end(); ++iter ) {
 	   vector<TermNode*> tempVec = (*iter).second;
 	   int Key = (*iter).first;
 	   cout << Key;
@@ -108,3 +108,9 @@ void DataLoader::display()
 	cout<<"DataLoaderable_display function called \n";
 }
 
+int DataLoader::getTotalDocuments(){
+	return 10;	
+}
+double DataLoader::getDocumentLengthById(int docid){
+	return 1;
+}
