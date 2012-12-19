@@ -48,11 +48,12 @@ void DataLoader::invFileSingleLineProcess(char* lineBuffer){
 	token = strtok (NULL, delim);
 	while(token != NULL)
 	{
-		//cout<<token<<endl;
-		sscanf(token,"%d %d",&docid,&freq); // 1 3 = 2-3-4-, 2 2 = 2-6-,
-		//cout<<"get docid & freq: "<<docid<<";"<<freq<<endl;
-		newTerm->addPosting(docid,freq);
-		//system("pause");
+		cout<<"token:"<<token<<":"<<endl;
+		int num = sscanf(token,"%d %d",&docid,&freq); // 1 3 = 2-3-4-, 2 2 = 2-6-,
+		if(num>=2){
+			cout<<"get docid & freq: "<<docid<<";"<<freq<<endl;
+			newTerm->addPosting(docid,freq);
+		}
 		token = strtok (NULL, delim);	
 	}  
 	this->add(newTerm);
