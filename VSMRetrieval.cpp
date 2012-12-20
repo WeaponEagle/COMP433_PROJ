@@ -48,6 +48,9 @@ void VSMRetrieval::retrieve(std::string query, std::ofstream& ofs)
     std::istream_iterator<std::string> begin(ss), end;
     std::vector<std::string> tokens(begin, end);
     
+    // ***** For storing DocId of each tokens
+    std::vector<vector<int>> DOCID;
+    
     // Query Id
     std::string queryId = tokens[0];
     tokens.erase(tokens.begin());
@@ -76,6 +79,52 @@ void VSMRetrieval::retrieve(std::string query, std::ofstream& ofs)
             retrievedDocument->documentId = documentId;
             retrievedDocument->similarity += posting->getTermFrequency() * (log((double)dataLoader->getTotalDocuments()) / termNode->getDocumentFrequency()); // TF * IDF
         }
+        
+        // ***** Use this term's all poistings to their the docID
+        for (int j = 0; j < postings.size(); j++) {
+            Posting *posting = postings[j];
+            int documentId = posting->getDocumentId();
+            DOCID [i][j] = documentId;  //*****
+        }
+    }
+    
+    // ***** using it to store common DOC  (intersection)
+    std::vector<int> commonDOC ;
+	int commonDOCCounter = 1;
+	
+    for (int j = 0; j < DOCID[0].size(); j++) {
+    	int expectedID = DOCID[0][j];
+    	for (int i = 1; i < numberOfTokens; i++){
+    		if (DOCID[i].find(expectedID) == string::npos){
+    			break;
+    		}
+    		commonDOCCounter ++;
+    		
+    	}
+    	if ( commonDOCCounter == numberOfTokens){
+    		commonDOC.push_back(expectedID);
+    	}
+    }
+    
+    // ***** using it to store positions  (intersection)
+    vector<vector<int>> positions;
+    for (int i = 0; i < numberOfTokens; i++) {  
+    	 for (int j = 0; j < commonDOC.size(); j++) { 
+    		positions[i][j] = dataloader->findTerm(i)->getPosting(j)->getPosition();
+    }
+    
+    // ***** the so called binary search
+    vector<int> winner;
+    for (int j = 0; j < positions[0].size(); j++){
+    	int expectedID = DOCID[0][j];
+    	for (int i = 1; i < numberOfTokens; i++){
+    		expectedID ++; // for phrasing 
+    		if (DOCID[0].find(expectedID) == string::npos){
+    			break;
+    		}
+    		winner.push_back(j);
+    	}
+    		
     }
     
     // Vector storing references only
